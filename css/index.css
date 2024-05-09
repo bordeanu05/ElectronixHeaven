@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap");
+:root {
+  --red: #ff0000;
+  --lightblue: #00ffff;
+  --blue: #0000ff;
+  --maxwidth: 1200px;
+  --gri: #292d2d;
+  --crem: #fff9f4;
+  --gold: #c6a66f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--gri);
+}
+
+.container {
+  margin: 0 auto;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.navbar .container .meniu .meniu-dpd li#buton-cont a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 28px;
+}
+
+#showcase {
+  background-image: url("../imagini/cover.webp");
+  background-size: cover;
+  background-position: center bottom;
+  height: 55vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#showcase .showcase-content {
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+#showcase .showcase-content h2 {
+  font-family: Lexend, sans-serif;
+  font-size: 70px;
+  margin-bottom: 10px;
+  color: lightgray;
+  margin-bottom: 100px;
+  backdrop-filter: blur(10px);
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
+}
+
+#showcase .showcase-content a {
+  font-family: Lexend, sans-serif;
+  font-size: 25px;
+  text-decoration: none;
+  color: #242424;
+  background-color: var(--crem);
+  padding: 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  border: 2px solid #242424;
+}
+
+#showcase .showcase-content a:hover {
+  color: #242424;
+  background-color: transparent;
+}
+
+#preview .preview-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 0%;
+  grid-gap: 50px;
+  margin-top: 100px;
+}
+
+#preview .preview-content .preview-product {
+  margin: 0 10px;
+  width: 100%;
+}
+
+#preview .preview-content .preview-product img {
+  height: 300px;
+  width: 300px;
+  border-radius: 15px;
+}
+
+#preview a {
+  transition: all 0.25s ease;
+  background-color: var(--crem);
+  border-radius: 10px;
+  margin: 0 40px;
+  text-decoration: none;
+  color: black;
+  font-family: Lexend, sans-serif;
+  text-align: center;
+  padding-top: -10px;
+}
+
+#preview a:hover {
+  transform: scale(1.03);
+}
