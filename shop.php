@@ -51,20 +51,23 @@ if (isset($_POST['adauga'])) {
             <li><a href="index.php">Acasa</a></li>
             <li><a href="shop.php">Shop</a></li>
             <li><a href="about.php">Despre</a></li>
-            <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+            <?php
+              if(!is_admin_or_seller($con, $user_data['id'])) { ?>
+                <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+              <?php } ?>
 
           
             <?php 
-                if ($user_data && !is_admin($con, $user_data['id'])) { ?>
+                if ($user_data && !is_admin_or_seller($con, $user_data['id'])) { ?>
                     <li id="buton-cont"><a href="account.php"><img src="imagini/user.png"></a></li>
                     <li><a href="logout.php">Log Out</a></li>
-                <?php } else if(!is_admin($con, $user_data['id'])) { ?>
+                <?php } else if(!is_admin_or_seller($con, $user_data['id'])) { ?>
                     <li><a href="login.php">Log In</a></li>
                     <li><a href="register.php ">Register</a></li>
                 <?php } ?>  
                 
                 <?php 
-                if ($user_data && is_admin($con, $user_data['id'])) {
+                if ($user_data && is_admin_or_seller($con, $user_data['id'])) {
                     echo '<div class="hamburger2">
                     <div class="middle-bar2">
                       <div class="top-bar2"></div>
@@ -101,11 +104,18 @@ if (isset($_POST['adauga'])) {
 
     <div id="products">
         <div class="container">
-            <?php 
-            $select_produs = mysqli_query($con, "SELECT * FROM products ORDER BY id ASC") or die('query failed');
-            if (mysqli_num_rows($select_produs) > 0) {
-              while ($fetch_produs = mysqli_fetch_assoc($select_produs)) {
-                  ?>
+        <?php 
+        $select_produs = mysqli_query($con, "SELECT * FROM products ORDER BY id ASC") or die('query failed');
+        if (mysqli_num_rows($select_produs) > 0) {
+            while ($fetch_produs = mysqli_fetch_assoc($select_produs)) {
+                $product_id = $fetch_produs['id'];
+                $seller_id = $fetch_produs['seller_id']; // Obții seller_id-ul produsului
+
+                // Obții numele vânzătorului asociat cu acest produs
+                $seller_query = mysqli_query($con, "SELECT user_name FROM users WHERE id = $seller_id");
+                $seller_data = mysqli_fetch_assoc($seller_query);
+                $seller_name = $seller_data['user_name'];
+                ?>
                   <div class="box">
                       <div class="box-content">
                           <div class="img-container">
@@ -121,7 +131,7 @@ if (isset($_POST['adauga'])) {
                           </div>
                           <div class="pret"><?php echo $fetch_produs['pret']; ?> lei</div>
                           
-                          
+                          <div class="vandut-de">Vândut de: <?php echo $seller_name == "admin" ? "ElectronixHeaven" : $seller_name; ?></div> 
                           <form method="POST" action="">
                               <input type="hidden" name="nume" value="<?php echo $fetch_produs['nume']; ?>">
                               <input type="hidden" name="pret" value="<?php echo $fetch_produs['pret']; ?>">
@@ -137,7 +147,7 @@ if (isset($_POST['adauga'])) {
                               <!-- <input type="submit" name="adauga" value="Adauga in cos" class="hero-btn"> -->
                           </form>                  
                           <?php 
-                            if ($user_data && is_admin($con, $user_data['id'])) {
+                            if ($user_data && is_admin_or_seller($con, $user_data['id'])) {
                               // Add the quantity div here
                           ?>
                             <div class="quantity-container">

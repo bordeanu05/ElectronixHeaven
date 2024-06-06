@@ -91,16 +91,33 @@ function adauga_in_cos($con, $nume, $image_data) {
     // }
 }
 
-
 function is_admin($con, $user_id) {
-    $admin_user_id = 29;  // Replace with the actual user ID for administrators
-
+    $admin_user_id = 29;  // ID-ul utilizatorului administratorului (presupunând că 29 este ID-ul administratorului)
+    
+    // Verifică dacă a fost găsit un rezultat și dacă utilizatorul este administrator sau vânzător
     if ($user_id == $admin_user_id) {
         return true;
     } else {
         return false;
     }
 }
+
+function is_admin_or_seller($con, $user_id) {
+    $admin_user_id = 29;  // ID-ul utilizatorului administratorului (presupunând că 29 este ID-ul administratorului)
+    
+    // Verifică dacă utilizatorul este administrator sau vânzător
+    $query = "SELECT * FROM users WHERE id = $user_id AND account_type = 'seller'"; // Modifică coloana pentru ID-ul utilizatorului și tipul de cont
+    
+    $result = mysqli_query($con, $query);
+    
+    // Verifică dacă a fost găsit un rezultat și dacă utilizatorul este administrator sau vânzător
+    if ($result && mysqli_num_rows($result) > 0 || $user_id == $admin_user_id) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 function validate_login($con, $username, $password)
 {

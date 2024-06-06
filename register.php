@@ -18,12 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $password = mysqli_real_escape_string($con, $password);
     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
     $token = bin2hex(random_bytes(50));
-
+    $account_type = isset($_POST['account_type']) ? $_POST['account_type'] : '';
+    
 // Insert user data into the database
-    $query = "INSERT into `users` (user_name, password, email, token, isEmailConfirmed)
-              VALUES ('$username', '$password_hashed', '$email', '$token', '0')";
+    $query = "INSERT into `users` (user_name, password, email, token, isEmailConfirmed, account_type)
+              VALUES ('$username', '$password_hashed', '$email', '$token', '0', '$account_type')";
     $result = mysqli_query($con, $query);
-
 
 
     if ($result) {
@@ -33,15 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'email ->change'; // Your Gmail username
-            $mail->Password = 'password ->change'; // Your Gmail app password
+            $mail->Username = 'bolosandrei4@gmail.com'; // Your Gmail username
+            $mail->Password = 'lniw bnum adri dxxn'; // Your Gmail app password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port = 465;
 
             //Recipients
-            $mail->setFrom('email ->change', 'ElectronixHeaven'); // Your Gmail address and your name
+            $mail->setFrom('bolosandrei4@gmail.com', 'ElectronixHeaven'); // Your Gmail address and your name
             $mail->addAddress($email, $username); // User's email and username
-            $mail->addReplyTo('email ->change', 'ElectronixHeaven'); // Your Gmail address and your name
+            $mail->addReplyTo('bolosandrei4@gmail.com', 'ElectronixHeaven'); // Your Gmail address and your name
 
             //Content
             $mail->isHTML(true);
@@ -144,6 +144,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             placeholder="Confirm Password"
             id="password-field"
           />
+
+          <input type="checkbox" name="account_type" value="seller"> Vânzător
+
+
           <div id="login-container">
             <!-- <a href="login.php" id="login-button">Register</a> -->
             <input class="login-button" type="submit" value="Register" id="login-button">

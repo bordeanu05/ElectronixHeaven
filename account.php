@@ -58,7 +58,10 @@ $userData = getUserDataFromDatabase($userId);
             <li><a href="index.php">Acasa</a></li>
             <li><a href="shop.php">Shop</a></li>
             <li><a href="about.php">Despre</a></li>
-            <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+            <?php
+              if(!is_admin_or_seller($con, $user_data['id'])) { ?>
+                <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+              <?php } ?>
             
           </ul>
 
@@ -93,42 +96,72 @@ $userData = getUserDataFromDatabase($userId);
             <p><strong>Username:</strong> ' . $user_data['user_name'] . '</p>
             <p><strong>Email:</strong> ' . $user_data['email'] . '</p>
         </div>';
-        $query_orders = "SELECT * FROM orders WHERE user_id = $user_id";
-        $result_orders = mysqli_query($con, $query_orders);
-        echo '<h3>My Orders</h3>';
-        if ($result_orders) {
-            echo '<div id="tabel-comanda">
-            <table border="1">
-                    <tr>
-                        <th>Order Number</th>
-                        <th>Total Price</th>
-                        <th>Order Date</th>
-                        <th>Name</th>
-                        <th>Surname</th>
-                        <th>Address</th>
-                        <th>Phone Number</th>
-                        <th>Email</th>
-                        <th>Payment Method</th>
-                    </tr>';
 
-            while ($order_data = mysqli_fetch_assoc($result_orders)) {
-                echo '<tr>
-                        <td>' . $order_data['order_number'] . '</td>
-                        <td>' . $order_data['total_price'] . '</td>
-                        <td>' . $order_data['order_date'] . '</td>
-                        <td>' . $order_data['name'] . '</td>
-                        <td>' . $order_data['surname'] . '</td>
-                        <td>' . $order_data['address'] . '</td>
-                        <td>' . $order_data['phone_number'] . '</td>
-                        <td>' . $order_data['user_email'] . '</td>
-                        <td>' . $order_data['payment_method'] . '</td>
-                      </tr>';
+        if ($user_data['account_type'] == 'seller') {
+            // Fetch and display products sold by this seller
+            $query_products = "SELECT * FROM products WHERE seller_id = $user_id";
+            $result_products = mysqli_query($con, $query_products);
+            echo '<h3>Products Sold by You</h3>';
+            if ($result_products) {
+                // Display products
+                echo '<div id="tabel-comanda">
+                    <table border="1">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Description</th>
+                            <!-- Add more columns as needed -->
+                        </tr>';
+                while ($product_data = mysqli_fetch_assoc($result_products)) {
+                    echo '<tr>
+                            <td>' . $product_data['nume'] . '</td>
+                            <td>' . $product_data['descriere'] . '</td>
+                            <!-- Add more cells for additional product information -->
+                        </tr>';
+                }
+                echo '</table></div>';
+                mysqli_free_result($result_products);
+            } else {
+                echo "Error fetching products sold by you: " . mysqli_error($con);
             }
-
-            echo '</table></div>';
-            mysqli_free_result($result_orders);
         } else {
-            echo "Error fetching user orders: " . mysqli_error($con);
+            // Display orders for non-seller users
+            $query_orders = "SELECT * FROM orders WHERE user_id = $user_id";
+            $result_orders = mysqli_query($con, $query_orders);
+            echo '<h3>My Orders</h3>';
+            if ($result_orders) {
+                echo '<div id="tabel-comanda">
+                    <table border="1">
+                            <tr>
+                                <th>Order Number</th>
+                                <th>Total Price</th>
+                                <th>Order Date</th>
+                                <th>Name</th>
+                                <th>Surname</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Payment Method</th>
+                            </tr>';
+
+                while ($order_data = mysqli_fetch_assoc($result_orders)) {
+                    echo '<tr>
+                                <td>' . $order_data['order_number'] . '</td>
+                                <td>' . $order_data['total_price'] . '</td>
+                                <td>' . $order_data['order_date'] . '</td>
+                                <td>' . $order_data['name'] . '</td>
+                                <td>' . $order_data['surname'] . '</td>
+                                <td>' . $order_data['address'] . '</td>
+                                <td>' . $order_data['phone_number'] . '</td>
+                                <td>' . $order_data['user_email'] . '</td>
+                                <td>' . $order_data['payment_method'] . '</td>
+                              </tr>';
+                }
+
+                echo '</table></div>';
+                mysqli_free_result($result_orders);
+            } else {
+                echo "Error fetching user orders: " . mysqli_error($con);
+            }
         }
         // Add more user information as needed
     } else {
@@ -141,7 +174,8 @@ $userData = getUserDataFromDatabase($userId);
     <div id="log-out-btn">
         <div id="buton-log">
         <a href="logout.php">Logout</a>
-        </div> </div><!-- Assuming you have a logout page -->
+        </div>
+    </div><!-- Assuming you have a logout page -->
 </section>
 
 </body>

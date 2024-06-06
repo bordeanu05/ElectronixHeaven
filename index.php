@@ -86,7 +86,10 @@ if (isset($_POST['logout'])) {
             <li><a href="index.php">Acasa</a></li>
             <li><a href="shop.php">Shop</a></li>
             <li><a href="about.php">Despre</a></li>
-            <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+            <?php
+              if(!is_admin_or_seller($con, $user_data['id'])) { ?>
+                <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+              <?php } ?>
             <?php 
                 if ($user_data) { ?>
                     <li id="buton-cont"><a href="account.php"><img src="imagini/user.png"></a></li>

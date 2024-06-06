@@ -7,7 +7,7 @@ include("php/functions.php");
 $user_data = check_login($con);
 
 // Check if the user is an admin
-if (!is_admin($con, $user_data['id'])) {
+if (!is_admin_or_seller($con, $user_data['id'])) {
     header("Location: index.php"); // Redirect non-admin users
     exit();
 }
@@ -25,10 +25,12 @@ if (isset($_POST['submit'])) {
 
     $image_folder = "imagini/";
 
+    $seller_id = $user_data['id'];
+
     move_uploaded_file($image_tmp, $image_folder . $image_name);
 
     // Insert product into the database
-    $insert_query = "INSERT INTO products (nume, descriere, img, pret, quantity) VALUES ('$nume', '$descriere', '$image_name', '$pret', '$quantity')"; // Updated line
+    $insert_query = "INSERT INTO products (nume, descriere, img, pret, quantity, seller_id) VALUES ('$nume', '$descriere', '$image_name', '$pret', '$quantity', '$seller_id')"; // Updated line
     mysqli_query($con, $insert_query);
 
     echo "Product added successfully!";
@@ -60,7 +62,10 @@ if (isset($_POST['submit'])) {
             <li><a href="index.php">Acasa</a></li>
             <li><a href="shop.php">Shop</a></li>
             <li><a href="about.php">Despre</a></li>
-            <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+            <?php
+              if(!is_admin_or_seller($con, $user_data['id'])) { ?>
+                <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+              <?php } ?>
             <?php 
                 if ($user_data) { ?>
                     <li><a href="logout.php">Log Out</a></li>

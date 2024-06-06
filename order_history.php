@@ -6,7 +6,7 @@ include("php/functions.php");
 $user_data = check_login($con);
 
 // Check if the user is an admin
-if (!$user_data || !is_admin($con, $user_data['id'])) {
+if (!$user_data || !is_admin_or_seller($con, $user_data['id'])) {
     header("Location: index.php"); // Redirect non-admin users to the home page
     exit();
 }
@@ -55,7 +55,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mark_delivered'])) {
             <li><a href="index.php">Acasa</a></li>
             <li><a href="shop.php">Shop</a></li>
             <li><a href="about.php">Despre</a></li>
-            <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+            <?php
+              if(!is_admin_or_seller($con, $user_data['id'])) { ?>
+                <li><a href="cos.php"><img src="imagini/shopping-cart3.png" alt=""></a></li>
+              <?php } ?>
             <?php 
                 if ($user_data) { ?>
                     <li><a href="logout.php">Log Out</a></li>
